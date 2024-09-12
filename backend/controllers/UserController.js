@@ -12,4 +12,4 @@ const register = async (req, res)=>{
     res.send("API DE REGISTRO DE USUÁRIO")
 }
 
-module.exports = {register}
+module.exports = {register,}
