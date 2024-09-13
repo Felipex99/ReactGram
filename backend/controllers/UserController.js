@@ -44,5 +44,12 @@ const register = async(req,res)=>{
         token: generateToken(newUser._id)
     })
 }
+// SIGN USER IN
+const login = (req, res) =>{
+    res.send("Login")
+}
 
-module.exports = {register,}
+module.exports = {
+    register,
+    login
+}
