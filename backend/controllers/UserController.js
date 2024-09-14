@@ -8,10 +8,6 @@ const generateToken = (id)=>{
     return jwt.sign({id}, jwtSecret,{expiresIn:"7d"})
 }
 
-//Registra usuário e sign in
-// const register = async (req, res)=>{
-//     res.send("API DE REGISTRO DE USUÁRIO")
-// }
 
 const register = async(req,res)=>{
     const {name, email, password, confirmPassword} = req.body
@@ -40,13 +36,30 @@ const register = async(req,res)=>{
     }
 
     res.status(201).json({
-        id: newUser.id,
-        token: generateToken(newUser._id)
+        id: user.id,
+        token: generateToken(user._id)
     })
 }
 // SIGN USER IN
-const login = (req, res) =>{
-    res.send("Login")
+const login = async (req, res) =>{
+    const {email, password} = req.body
+    const user = await User.findOne({email})
+    //Check if user exists
+    if(!user){
+        res.status(404).json({erros:["Usuário não encontrado"]})
+        return
+    }
+    //check if password matches
+    if(!(bcrypt.compare(password, user.password))){
+        res.status(422).json({errors:[`${user.name} a senha está errada, por favor digite novamente`]})
+        return
+    }
+    // retorna o usuário com token
+    res.status(201).json({
+        id: user._id,
+        profileImage: user.profileImage,
+        token: generateToken(user._id)
+    })
 }
 
 module.exports = {
